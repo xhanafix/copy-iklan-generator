@@ -1,0 +1,431 @@
+:root {
+    --primary-color: #FF6B6B;
+    --secondary-color: #4ECDC4;
+    --background-color: #f9f9f9;
+    --form-background: #ffffff;
+    --text-color: #2d3436;
+    --input-background: #ffffff;
+    --input-border: #eee;
+    --input-text: #2d3436;
+    --benefit-background: #f8f9fa;
+    --border-radius: 10px;
+    --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark theme colors */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary-color: #FF6B6B;
+        --secondary-color: #4ECDC4;
+        --background-color: #1a1a1a;
+        --form-background: #2d2d2d;
+        --text-color: #ffffff;
+        --input-background: #3d3d3d;
+        --input-border: #4d4d4d;
+        --input-text: #ffffff;
+        --benefit-background: #363636;
+    }
+
+    /* Override specific elements for dark mode */
+    .subtitle {
+        color: #bebebe;
+    }
+
+    input, textarea {
+        background-color: var(--input-background);
+        border-color: var(--input-border);
+        color: var(--input-text);
+    }
+
+    input::placeholder, textarea::placeholder {
+        color: #888;
+    }
+
+    .benefit-input {
+        background-color: var(--input-background);
+        border-color: var(--input-border);
+    }
+
+    .benefit-input label {
+        color: var(--text-color);
+    }
+
+    .benefit-input input {
+        background-color: var(--input-background);
+        border-color: var(--input-border);
+        color: var(--text-color);
+    }
+
+    .ai-generated-content::before {
+        background-color: var(--form-background);
+        color: var(--secondary-color);
+        border-color: var(--secondary-color);
+    }
+
+    #output {
+        color: var(--text-color);
+    }
+
+    .error {
+        color: #ff6b6b;
+    }
+
+    .loading {
+        color: var(--secondary-color);
+    }
+
+    /* Improve contrast for disabled buttons */
+    button:disabled {
+        background-color: #444;
+        opacity: 0.7;
+    }
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.form-section {
+    background-color: var(--form-background);
+    padding: 25px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 20px;
+}
+
+.form-section h2 {
+    color: var(--secondary-color);
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #eee;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #ff5252;
+}
+
+#output {
+    background-color: var(--form-background);
+    padding: 25px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-top: 30px;
+    white-space: pre-line;
+    line-height: 1.8;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .form-section {
+        padding: 15px;
+    }
+    
+    input, textarea {
+        font-size: 16px; /* Prevents zoom on mobile */
+    }
+}
+
+/* Placeholder styling */
+::placeholder {
+    color: #999;
+    opacity: 0.8;
+}
+
+/* Loading state */
+button:disabled {
+    background-color: #cccccc;
+    cursor: wait;
+    opacity: 0.7;
+}
+
+button:disabled::after {
+    content: "...";
+    animation: dots 1.5s infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: ""; }
+    40% { content: "."; }
+    60% { content: ".."; }
+    80%, 100% { content: "..."; }
+}
+
+/* Error state */
+.error {
+    color: #ff0033;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Add these new styles to your existing CSS */
+
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.suggest-button {
+    width: auto;
+    margin-top: 10px;
+    background-color: var(--secondary-color);
+    padding: 10px 20px;
+}
+
+.suggest-button:hover {
+    background-color: #3dbdb5;
+}
+
+.loading {
+    display: none;
+    color: var(--secondary-color);
+    margin-top: 10px;
+    font-style: italic;
+}
+
+.ai-generated-content {
+    position: relative;
+}
+
+.ai-generated-content::before {
+    content: "AI Generated ✨";
+    position: absolute;
+    top: -25px;
+    right: 0;
+    font-size: 12px;
+    color: var(--secondary-color);
+    background-color: #fff;
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--secondary-color);
+}
+
+/* Add loading animation */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.loading {
+    animation: pulse 1.5s infinite;
+}
+
+.progress-indicator {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.2em;
+    color: var(--secondary-color);
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Style for the generated copy */
+#output {
+    background-color: var(--form-background);
+    padding: 25px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-top: 30px;
+    white-space: pre-line;
+    line-height: 1.8;
+}
+
+#output br {
+    margin-bottom: 10px;
+}
+
+/* Add these styles to your existing CSS */
+
+.benefits-section {
+    margin: 20px 0;
+}
+
+.benefits-section h3 {
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.benefit-input {
+    background-color: var(--benefit-background);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--input-border);
+}
+
+.benefit-input label {
+    margin-top: 0;
+    font-size: 0.9em;
+    color: var(--text-color);
+}
+
+.benefit-input input {
+    margin-top: 5px;
+    background-color: var(--input-background);
+    color: var(--text-color);
+}
+
+@media (max-width: 600px) {
+    .benefits-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Add these new styles for the copy button and output container */
+.output-container {
+    position: relative;
+    margin-top: 30px;
+}
+
+.copy-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    opacity: 0.9;
+    width: auto;
+    margin: 0;
+}
+
+.copy-button:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+}
+
+.copy-button.copied {
+    background-color: #4CAF50;
+}
+
+/* Optimize existing styles */
+.price-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+@media (max-width: 600px) {
+    .price-group {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Add these new styles for the toggle switch */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.toggle-container {
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+
+.toggle-label {
+    margin-left: 8px;
+    font-size: 0.9em;
+    color: var(--text-color);
+}
+
+/* Add this JavaScript to handle the toggle */
+document.addEventListener('DOMContentLoaded', function() {
+    const includeOfferCheckbox = document.getElementById('includeOffer');
+    const offerDetailsDiv = document.getElementById('offerDetails');
+
+    includeOfferCheckbox.addEventListener('change', function() {
+        offerDetailsDiv.style.display = this.checked ? 'block' : 'none';
+        
+        // Clear inputs when hiding
+        if (!this.checked) {
+            const inputs = offerDetailsDiv.querySelectorAll('input');
+            inputs.forEach(input => input.value = '');
+        }
+    });
+});
