@@ -70,6 +70,20 @@ document.addEventListener('DOMContentLoaded', function() {
             hideProgress();
         }
     });
+
+    // Add the toggle functionality
+    const includeOfferCheckbox = document.getElementById('includeOffer');
+    const offerDetailsDiv = document.getElementById('offerDetails');
+
+    includeOfferCheckbox.addEventListener('change', function() {
+        offerDetailsDiv.style.display = this.checked ? 'block' : 'none';
+        
+        // Clear inputs when hiding
+        if (!this.checked) {
+            const inputs = offerDetailsDiv.querySelectorAll('input');
+            inputs.forEach(input => input.value = '');
+        }
+    });
 });
 
 // Helper functions
@@ -130,36 +144,15 @@ function showError() {
 function displayOutput(content) {
     const outputDiv = document.getElementById('output');
     
-    // Add spacing between sections using double line breaks
+    // Format the content with simple line breaks and spacing
     const formattedContent = content
-        // Add dividers between major sections
-        .replace(/(\d\.)([^\n])/g, '$1\n$2')  // Add line break after numbers
-        .replace(/(✅|☑️|✔️|💫|💯|⭐)/g, '\n$1') // Add line break before emojis
-        .replace(/(\n{3,})/g, '\n\n')  // Limit consecutive line breaks to max 2
-        .replace(/(#[^\s]+)/g, '\n$1')    // Add line break before hashtags
-        .replace(/(RM\d+\.?\d*)/g, '\n$1') // Add line break before prices
-        .replace(/(Untuk korang yang)/g, '\n\n$1') // Add breaks before offer section
-        .replace(/(Nak tau apa yang)/g, '\n\n$1'); // Add breaks before special section
+        .replace(/(\d\.)([^\n])/g, '\n\n$1 $2')  // Add space after numbers
+        .replace(/(✅|☑️|✔️|💫|💯|⭐)/g, '\n$1')   // Add line break before emojis
+        .replace(/(\n{3,})/g, '\n\n')            // Limit consecutive line breaks
+        .replace(/(RM\d+\.?\d*)/g, '\n$1\n')     // Add spacing around prices
+        .replace(/(#[^\s]+)/g, '\n$1');          // Add line break before hashtags
     
-    // Convert line breaks to HTML and add section spacing
-    outputDiv.innerHTML = formattedContent
-        .split('\n')
-        .map(line => {
-            // Add special styling for different elements
-            if (line.match(/^(\d\.)/)) {
-                return `<div class="section-header">${line}</div>`;
-            } else if (line.match(/^(✅|☑️|✔️|💫|💯|⭐)/)) {
-                return `<div class="benefit-item">${line}</div>`;
-            } else if (line.match(/^RM/)) {
-                return `<div class="price-item">${line}</div>`;
-            } else if (line.match(/^#/)) {
-                return `<div class="hashtag">${line}</div>`;
-            } else if (line.match(/(Untuk korang yang|Nak tau apa yang)/)) {
-                return `<div class="section-subheader">${line}</div>`;
-            }
-            return `<div class="content-line">${line}</div>`;
-        })
-        .join('');
+    outputDiv.innerHTML = formattedContent.replace(/\n/g, '<br>');
 }
 
 // Add these functions at the bottom of your script.js file
