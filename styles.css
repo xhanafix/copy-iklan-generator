@@ -429,3 +429,57 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+/* Add these new styles for formatted output */
+#output {
+    font-size: 16px;
+    line-height: 1.6;
+    padding: 30px;
+}
+
+#output .section-header {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin: 25px 0 15px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--secondary-color);
+}
+
+#output .benefit-item {
+    margin: 12px 0;
+    padding: 8px;
+    background-color: rgba(78, 205, 196, 0.1);
+    border-radius: 6px;
+}
+
+#output .price-item {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin: 12px 0;
+}
+
+#output .hashtag {
+    display: inline-block;
+    margin: 8px 8px 8px 0;
+    padding: 4px 10px;
+    background-color: rgba(255, 107, 107, 0.1);
+    border-radius: 15px;
+    color: var(--primary-color);
+}
+
+#output .content-line {
+    margin: 10px 0;
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+    #output .benefit-item {
+        background-color: rgba(78, 205, 196, 0.15);
+    }
+
+    #output .hashtag {
+        background-color: rgba(255, 107, 107, 0.15);
+    }
+}

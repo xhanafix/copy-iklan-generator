@@ -129,7 +129,33 @@ function showError() {
 
 function displayOutput(content) {
     const outputDiv = document.getElementById('output');
-    outputDiv.innerHTML = content.replace(/\n/g, '<br>');
+    
+    // Add spacing between sections using double line breaks
+    const formattedContent = content
+        // Add dividers between major sections
+        .replace(/(\d\.)([^\n])/g, '$1\n$2')  // Add line break after numbers
+        .replace(/(✅|☑️|✔️|💫|💯|⭐)/g, '\n$1') // Add line break before emojis
+        .replace(/(\n{3,})/g, '\n\n')  // Limit consecutive line breaks to max 2
+        .replace(/hashtag/gi, '\n#')    // Add line break before hashtags
+        .replace(/(RM\d+\.?\d*)/g, '\n$1'); // Add line break before prices
+    
+    // Convert line breaks to HTML and add section spacing
+    outputDiv.innerHTML = formattedContent
+        .split('\n')
+        .map(line => {
+            // Add special styling for different elements
+            if (line.match(/^(\d\.)/)) {
+                return `<div class="section-header">${line}</div>`;
+            } else if (line.match(/^(✅|☑️|✔️|💫|💯|⭐)/)) {
+                return `<div class="benefit-item">${line}</div>`;
+            } else if (line.match(/^RM/)) {
+                return `<div class="price-item">${line}</div>`;
+            } else if (line.match(/^#/)) {
+                return `<div class="hashtag">${line}</div>`;
+            }
+            return `<div class="content-line">${line}</div>`;
+        })
+        .join('');
 }
 
 // Add these functions at the bottom of your script.js file
