@@ -136,8 +136,10 @@ function displayOutput(content) {
         .replace(/(\d\.)([^\n])/g, '$1\n$2')  // Add line break after numbers
         .replace(/(✅|☑️|✔️|💫|💯|⭐)/g, '\n$1') // Add line break before emojis
         .replace(/(\n{3,})/g, '\n\n')  // Limit consecutive line breaks to max 2
-        .replace(/hashtag/gi, '\n#')    // Add line break before hashtags
-        .replace(/(RM\d+\.?\d*)/g, '\n$1'); // Add line break before prices
+        .replace(/(#[^\s]+)/g, '\n$1')    // Add line break before hashtags
+        .replace(/(RM\d+\.?\d*)/g, '\n$1') // Add line break before prices
+        .replace(/(Untuk korang yang)/g, '\n\n$1') // Add breaks before offer section
+        .replace(/(Nak tau apa yang)/g, '\n\n$1'); // Add breaks before special section
     
     // Convert line breaks to HTML and add section spacing
     outputDiv.innerHTML = formattedContent
@@ -152,6 +154,8 @@ function displayOutput(content) {
                 return `<div class="price-item">${line}</div>`;
             } else if (line.match(/^#/)) {
                 return `<div class="hashtag">${line}</div>`;
+            } else if (line.match(/(Untuk korang yang|Nak tau apa yang)/)) {
+                return `<div class="section-subheader">${line}</div>`;
             }
             return `<div class="content-line">${line}</div>`;
         })
