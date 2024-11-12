@@ -435,42 +435,62 @@ document.addEventListener('DOMContentLoaded', function() {
     font-size: 16px;
     line-height: 1.6;
     padding: 30px;
+    white-space: pre-wrap;
 }
 
 #output .section-header {
-    font-size: 1.2em;
+    font-size: 1.3em;
     font-weight: bold;
     color: var(--primary-color);
     margin: 25px 0 15px 0;
-    padding-bottom: 8px;
+    padding: 10px 0;
+    border-top: 2px solid var(--secondary-color);
     border-bottom: 2px solid var(--secondary-color);
+    text-align: center;
 }
 
 #output .benefit-item {
     margin: 12px 0;
-    padding: 8px;
+    padding: 12px;
     background-color: rgba(78, 205, 196, 0.1);
     border-radius: 6px;
+    border-left: 4px solid var(--secondary-color);
 }
 
 #output .price-item {
-    font-size: 1.1em;
+    font-size: 1.2em;
     font-weight: bold;
     color: var(--primary-color);
-    margin: 12px 0;
+    margin: 15px 0;
+    padding: 10px;
+    background-color: rgba(255, 107, 107, 0.1);
+    border-radius: 6px;
+    text-align: center;
 }
 
 #output .hashtag {
     display: inline-block;
     margin: 8px 8px 8px 0;
-    padding: 4px 10px;
+    padding: 6px 12px;
     background-color: rgba(255, 107, 107, 0.1);
-    border-radius: 15px;
+    border-radius: 20px;
     color: var(--primary-color);
+    font-weight: bold;
 }
 
 #output .content-line {
-    margin: 10px 0;
+    margin: 12px 0;
+}
+
+#output .section-subheader {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: var(--secondary-color);
+    margin: 25px 0 15px 0;
+    padding: 10px;
+    background-color: rgba(78, 205, 196, 0.1);
+    border-radius: 6px;
+    text-align: center;
 }
 
 /* Dark mode adjustments */
@@ -482,13 +502,4 @@ document.addEventListener('DOMContentLoaded', function() {
     #output .hashtag {
         background-color: rgba(255, 107, 107, 0.15);
     }
-}
-
-#output .section-subheader {
-    font-size: 1.1em;
-    font-weight: bold;
-    color: var(--secondary-color);
-    margin: 20px 0 15px 0;
-    padding-bottom: 5px;
-    border-bottom: 1px dashed var(--secondary-color);
 }
