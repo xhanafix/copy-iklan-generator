@@ -70,20 +70,6 @@ document.addEventListener('DOMContentLoaded', function() {
             hideProgress();
         }
     });
-
-    // Add the toggle functionality
-    const includeOfferCheckbox = document.getElementById('includeOffer');
-    const offerDetailsDiv = document.getElementById('offerDetails');
-
-    includeOfferCheckbox.addEventListener('change', function() {
-        offerDetailsDiv.style.display = this.checked ? 'block' : 'none';
-        
-        // Clear inputs when hiding
-        if (!this.checked) {
-            const inputs = offerDetailsDiv.querySelectorAll('input');
-            inputs.forEach(input => input.value = '');
-        }
-    });
 });
 
 // Helper functions
@@ -143,16 +129,7 @@ function showError() {
 
 function displayOutput(content) {
     const outputDiv = document.getElementById('output');
-    
-    // Format the content with simple line breaks and spacing
-    const formattedContent = content
-        .replace(/(\d\.)([^\n])/g, '\n\n$1 $2')  // Add space after numbers
-        .replace(/(✅|☑️|✔️|💫|💯|⭐)/g, '\n$1')   // Add line break before emojis
-        .replace(/(\n{3,})/g, '\n\n')            // Limit consecutive line breaks
-        .replace(/(RM\d+\.?\d*)/g, '\n$1\n')     // Add spacing around prices
-        .replace(/(#[^\s]+)/g, '\n$1');          // Add line break before hashtags
-    
-    outputDiv.innerHTML = formattedContent.replace(/\n/g, '<br>');
+    outputDiv.innerHTML = content.replace(/\n/g, '<br>');
 }
 
 // Add these functions at the bottom of your script.js file
@@ -214,51 +191,56 @@ async function generateSuggestions(productName, apiKey) {
 
 async function generateCopy(formData) {
     let prompt = `
-    Write a Malaysian casual style advertisement copy in Manglish (Malaysian English mixed with Malay), using "korang" style language. Format it with clear sections and spacing:
+    Write a Malaysian casual style advertisement copy in Manglish (Malaysian English mixed with Malay), using "korang" style language, very casual like chatting with friends. Use lots of emojis and Malaysian slang. Here's the structure:
 
-    ===================================
-    🔥 Create attention-grabbing headline for ${formData.productName}
-    ===================================
+    1. Create an attention-grabbing headline for ${formData.productName}. Make it relatable and add relevant emojis.
 
-    📢 Story (2-3 lines only):
-    ${formData.problem}
+    2. Write a short, friendly personal story about this problem: ${formData.problem}
+    Make it sound like you're sharing with friends.
 
-    ✨ BENEFITS untuk korang:
-    ${formData.benefits.map((benefit, index) => `${index + 1}. ${benefit}`).join('\n')}
+    3. List these 6 benefits in casual Bahasa Malaysia style. Use these emojis at the start of each benefit:
+    ✅ ${formData.benefits[0]}
+    ☑️ ${formData.benefits[1]}
+    ✔️ ${formData.benefits[2]}
+    💫 ${formData.benefits[3]}
+    💯 ${formData.benefits[4]}
+    ⭐ ${formData.benefits[5]}
 
-    🌟 SPECIAL FEATURES:
-    Nak tau apa yang special pasal ${formData.productName} ni?
-    ${formData.special}
+    4. Special features section starting with:
+    "Nak tau apa yang special pasal ${formData.productName} ni?"
+    Then explain in simple language: ${formData.special}
     `;
 
     // Add offer section only if offer details exist
     if (formData.hasOffer) {
-        prompt += `
-
-    💥 SPECIAL OFFER:
-    Untuk korang yang grab sekarang ni...
-    ${formData.normalPrice ? `Normal Price: RM${formData.normalPrice}` : ''}
-    ${formData.promoPrice ? `‼️ PROMO: RM${formData.promoPrice} je!` : ''}
-    ${formData.freeStuff ? `🎁 FREE GIFT: ${formData.freeStuff}` : ''}
-    ${formData.offerEnd ? `⏰ Offer valid until: ${formData.offerEnd}` : ''}`;
+        prompt += `\n\n5. Offer section starting with:
+        "Untuk korang yang grab sekarang ni..."
+        ${formData.normalPrice ? `- Normal price: RM${formData.normalPrice}` : ''}
+        ${formData.promoPrice ? `- Promo price: RM${formData.promoPrice}` : ''}
+        ${formData.freeStuff ? `- Free stuff: ${formData.freeStuff}` : ''}
+        ${formData.offerEnd ? `- Offer ends: ${formData.offerEnd}` : ''}`;
     }
 
     // Add contact info if it exists
     if (formData.contactInfo) {
-        prompt += `
-
-    📞 PM sekarang:
-    ${formData.contactInfo}
-
-    JANGAN TUNGGU! Limited time offer je ni! 🔥
-        `;
+        prompt += `\n\n6. End with:
+        - Contact info: ${formData.contactInfo}
+        - Add urgency
+        - Add 3 relevant hashtags`;
+    } else {
+        prompt += `\n\n6. End with:
+        - Add 3 relevant hashtags`;
     }
 
-    prompt += `
-
-    #${formData.productName.replace(/\s+/g, '')} #MustTry #LokalIsBest
-
-    Note: Please maintain this exact formatting with line breaks and emojis. Each section should be clearly separated.`;
+    prompt += `\n\nRemember to:
+    - Write everything in a very casual, friendly tone
+    - Use "korang" instead of "anda"
+    - Add lots of emojis throughout
+    - Use casual particles like "je", "ni", "tu"
+    - Make it sound like chatting with friends
+    - Use Malaysian slang words like "best", "power", "gempak"
+    - Mix in some common Malaysian expressions like "confirm", "memang worth it", "takde lawan"
+    `;
 
     try {
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
