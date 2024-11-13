@@ -198,7 +198,11 @@ async function generateCopy(formData) {
     2. Write a short, friendly personal story about this problem: ${formData.problem}
     Make it sound like you're sharing with friends.
 
-    3. List these 6 benefits in casual Bahasa Malaysia style. Use these emojis at the start of each benefit:
+    3. Add 2-3 short testimonials in this format:
+    "testimonial statement" - Name, Location
+    Make them sound authentic and relatable to Malaysian audience. Use local names and places.
+
+    4. List these 6 benefits in casual Bahasa Malaysia style. Use these emojis at the start of each benefit:
     ✅ ${formData.benefits[0]}
     ☑️ ${formData.benefits[1]}
     ✔️ ${formData.benefits[2]}
