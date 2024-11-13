@@ -86,6 +86,10 @@ function collectFormData() {
         benefits.push(document.getElementById(`benefit${i}`).value);
     }
 
+    // Get tone and language selections
+    const tone = document.querySelector('input[name="tone"]:checked').value;
+    const language = document.querySelector('input[name="language"]:checked').value;
+
     // Get offer details if they exist, otherwise set to null
     const normalPrice = document.getElementById('normalPrice').value 
         ? parseFloat(document.getElementById('normalPrice').value).toFixed(2)
@@ -103,6 +107,8 @@ function collectFormData() {
         problem: document.getElementById('problem').value,
         benefits,
         special: document.getElementById('special').value,
+        tone,
+        language,
         hasOffer: normalPrice || promoPrice || freeStuff || offerEnd,
         normalPrice,
         promoPrice,
@@ -163,7 +169,7 @@ async function generateSuggestions(productName, apiKey) {
                 'Authorization': `Bearer ${apiKey}`
             },
             body: JSON.stringify({
-                model: "gpt-3.5-turbo",
+                model: "gpt-4",
                 messages: [{
                     role: "user",
                     content: suggestionPrompt
@@ -178,7 +184,7 @@ async function generateSuggestions(productName, apiKey) {
 
         const data = await response.json();
         
-        if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+        if (!data.choices || !data.choices[0] || !data.choices[0].message || !data.choices[0].message.content) {
             throw new Error('Invalid response format from OpenAI');
         }
 
@@ -190,19 +196,52 @@ async function generateSuggestions(productName, apiKey) {
 }
 
 async function generateCopy(formData) {
+    const styleGuide = {
+        colloquial: {
+            english: {
+                style: "casual Malaysian English style with some Manglish",
+                pronouns: "you, your",
+                examples: "gonna, wanna, super nice",
+                tone: "friendly and chatty"
+            },
+            malay: {
+                style: "casual Bahasa Malaysia with common slang",
+                pronouns: "korang, awak",
+                examples: "best gila, memang power, confirm puas hati",
+                tone: "santai dan mesra"
+            }
+        },
+        formal: {
+            english: {
+                style: "professional Malaysian English",
+                pronouns: "you (formal), one",
+                examples: "excellent quality, premium service",
+                tone: "professional and respectful"
+            },
+            malay: {
+                style: "Bahasa Malaysia formal/standard",
+                pronouns: "anda, tuan/puan",
+                examples: "kualiti terjamin, perkhidmatan cemerlang",
+                tone: "profesional dan sopan"
+            }
+        }
+    };
+
+    const style = styleGuide[formData.tone][formData.language];
+
     let prompt = `
-    Write a Malaysian casual style advertisement copy in Manglish (Malaysian English mixed with Malay), using "korang" style language, very casual like chatting with friends. Use lots of emojis and Malaysian slang. Here's the structure:
+    Write a ${style.style} advertisement copy for ${formData.productName}.
+    Use ${style.tone} tone with ${style.pronouns} as pronouns.
+    Examples of language style: ${style.examples}
 
-    1. Create an attention-grabbing headline for ${formData.productName}. Make it relatable and add relevant emojis.
+    1. Create an attention-grabbing headline for ${formData.productName}.
 
-    2. Write a short, friendly personal story about this problem: ${formData.problem}
-    Make it sound like you're sharing with friends.
+    2. Address this problem: ${formData.problem}
 
-    3. Add 2-3 short testimonials in this format:
+    3. Add 2-3 testimonials in this format:
     "testimonial statement" - Name, Location
-    Make them sound authentic and relatable to Malaysian audience. Use local names and places.
 
-    4. List these 6 benefits in casual Bahasa Malaysia style. Use these emojis at the start of each benefit:
+    4. List these 6 benefits:
     ✅ ${formData.benefits[0]}
     ☑️ ${formData.benefits[1]}
     ✔️ ${formData.benefits[2]}
@@ -210,15 +249,18 @@ async function generateCopy(formData) {
     💯 ${formData.benefits[4]}
     ⭐ ${formData.benefits[5]}
 
-    4. Special features section starting with:
-    "Nak tau apa yang special pasal ${formData.productName} ni?"
-    Then explain in simple language: ${formData.special}
+    5. Special features:
+    ${formData.special}
     `;
 
-    // Add offer section only if offer details exist
+    // Add offer section if it exists
     if (formData.hasOffer) {
-        prompt += `\n\n5. Offer section starting with:
-        "Untuk korang yang grab sekarang ni..."
+        const offerIntro = formData.language === 'malay' 
+            ? "Untuk korang yang grab sekarang ni..." 
+            : "For those who grab this now...";
+            
+        prompt += `\n\n6. Offer section starting with:
+        "${offerIntro}"
         ${formData.normalPrice ? `- Normal price: RM${formData.normalPrice}` : ''}
         ${formData.promoPrice ? `- Promo price: RM${formData.promoPrice}` : ''}
         ${formData.freeStuff ? `- Free stuff: ${formData.freeStuff}` : ''}
@@ -227,24 +269,38 @@ async function generateCopy(formData) {
 
     // Add contact info if it exists
     if (formData.contactInfo) {
-        prompt += `\n\n6. End with:
+        prompt += `\n\n7. End with:
         - Contact info: ${formData.contactInfo}
         - Add urgency
         - Add 3 relevant hashtags`;
     } else {
-        prompt += `\n\n6. End with:
+        prompt += `\n\n7. End with:
         - Add 3 relevant hashtags`;
     }
 
-    prompt += `\n\nRemember to:
-    - Write everything in a very casual, friendly tone
-    - Use "korang" instead of "anda"
-    - Add lots of emojis throughout
-    - Use casual particles like "je", "ni", "tu"
-    - Make it sound like chatting with friends
-    - Use Malaysian slang words like "best", "power", "gempak"
-    - Mix in some common Malaysian expressions like "confirm", "memang worth it", "takde lawan"
-    `;
+    // Add style-specific instructions
+    if (formData.tone === 'colloquial') {
+        if (formData.language === 'malay') {
+            prompt += `\n\nRemember to:
+            - Write everything in a very casual, friendly tone
+            - Use "korang" instead of "anda"
+            - Add lots of emojis throughout
+            - Use casual particles like "je", "ni", "tu"
+            - Make it sound like chatting with friends
+            - Use Malaysian slang words like "best", "power", "gempak"
+            - Mix in some common Malaysian expressions like "confirm", "memang worth it", "takde lawan"
+            `;
+        } else {
+            prompt += `\n\nRemember to:
+            - Write in casual Malaysian English
+            - Use friendly, conversational tone
+            - Add appropriate emojis
+            - Mix in some Manglish expressions
+            - Use casual words like "gonna", "wanna"
+            - Include Malaysian expressions like "sure can", "very nice one"
+            `;
+        }
+    }
 
     try {
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -254,12 +310,13 @@ async function generateCopy(formData) {
                 'Authorization': `Bearer ${formData.apiKey}`
             },
             body: JSON.stringify({
-                model: "gpt-3.5-turbo",
+                model: "gpt-4",
                 messages: [{
                     role: "user",
                     content: prompt
                 }],
-                temperature: 0.7
+                temperature: 0.7,
+                max_tokens: 1500
             })
         });
 

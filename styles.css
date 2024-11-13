@@ -429,3 +429,38 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+/* Add these styles after your existing form-section styles */
+.style-options {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.option-group {
+    flex: 1;
+}
+
+.radio-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.radio-group input[type="radio"] {
+    width: auto;
+    margin-right: 5px;
+}
+
+.radio-group label {
+    display: inline;
+    margin: 0;
+    font-weight: normal;
+}
+
+@media (max-width: 600px) {
+    .style-options {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
